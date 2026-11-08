@@ -75,7 +75,7 @@ Each filter matches a failure we shipped to a real person:
 | filter | the real case |
 |---|---|
 | reasoning fields | the agents' reasoning (*"The user is asking…"*) appeared in clear in a group of twenty people. The provider response was clean: the reasoning sat in `reasoning_content`, and the bot client pasted it back. Dropping the **field** fixes it without any text heuristic. |
-| derailment | a bot sent its reply, then the platform's **internal metadata header**, then an **invented reply from the user**. The user asked what the header was, and the bot explained it. The filter cuts at the first chat-template special token (both `|` and full-width `｜` forms) or at the echoed header. |
+| derailment | a model can continue past its own reply: it echoes the platform's **internal metadata header**, then writes an **invented reply in the user's name**. The filter cuts at the first chat-template special token (both `|` and full-width `｜` forms) or at the echoed header. |
 | `</think>` | an orphan `</think>` sent alone as the whole message. |
 | textual tool call | `<tool_call>memory_remember … </think> I will remember that…` — the tool was **never called**, nothing was stored, and the bot said it was done. The reply becomes *"I could not do that (the tool was not actually called). Could you ask me again?"* |
 
