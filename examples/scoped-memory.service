@@ -1,0 +1,19 @@
+# Example systemd unit for the memory MCP server. Adjust paths and user to your host.
+# Create the key once:  umask 077; python3 -c "import os;print(os.urandom(32).hex())" > /etc/bot-memory/scope.key
+# The proxy must be able to READ the key and the database; nothing else should.
+[Unit]
+Description=Scoped memory MCP server (person / group / shared)
+After=network.target
+
+[Service]
+Type=simple
+User=bot-memory
+Group=bot-memory
+Environment=SCOPED_MEMORY_PORT=8765
+Environment=SCOPED_MEMORY_DB=/var/lib/bot-memory/memory.sqlite
+Environment=SCOPED_MEMORY_KEY_FILE=/etc/bot-memory/scope.key
+ExecStart=/usr/bin/python3 /opt/group-bot-gateway/scoped_memory.py --serve
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

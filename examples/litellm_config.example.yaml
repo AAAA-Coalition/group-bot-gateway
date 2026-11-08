@@ -1,0 +1,26 @@
+# Minimal LiteLLM proxy config wiring the hook. Copy gateway_hook.py, output_filter.py
+# and scoped_memory.py next to this file (LiteLLM imports callbacks relative to the config).
+model_list:
+  - model_name: chat-model            # text only: listed in TEXT_ONLY_MODELS below
+    litellm_params:
+      model: openrouter/example/text-model
+      api_key: os.environ/OPENROUTER_API_KEY
+  - model_name: vision-model          # reads PDFs and images: DOCUMENT_MODEL below
+    litellm_params:
+      model: openrouter/example/vision-model
+      api_key: os.environ/OPENROUTER_API_KEY
+
+litellm_settings:
+  callbacks: gateway_hook.proxy_handler_instance
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+
+# Environment of the proxy process (systemd EnvironmentFile, docker env, ...):
+#   SCOPE_META_MARKER=CHAT_META
+#   SCOPE_META_KEYS=user_id,chat_id,chat_type
+#   SCOPED_MEMORY_KEY_FILE=/etc/bot-memory/scope.key      # same file as the memory server
+#   SCOPED_MEMORY_DB=/var/lib/bot-memory/memory.sqlite     # read-only from the proxy
+#   DOCUMENT_MODEL=vision-model
+#   TEXT_ONLY_MODELS=chat-model
+#   FILTER_META_MARKERS=CHAT_META
